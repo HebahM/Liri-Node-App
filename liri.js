@@ -68,6 +68,7 @@ function runBands() {
                 // console.log(response.data)
                 for (var i = 0; i < response.data.length; i++) {
                     console.log("-----------------------------------------------------------------------")
+                    console.log("Lineup: " + response.data[i].lineup)
                     console.log("Venue: " + response.data[i].venue.name)
                     console.log("Location: " + response.data[i].venue.city + ", " + response.data[i].venue.region + ", " + response.data[i].venue.country)
                     var concertDateTime = response.data[i].datetime;
@@ -75,7 +76,19 @@ function runBands() {
                     var convertedDate = moment(concertDateTime).format('L');
                     console.log("Date: " + convertedDate)
                     console.log("-----------------------------------------------------------------------")
+                    var text = "\nLineup: " + response.data[i].lineup + "\nVenue: " + response.data[i].venue.name + "\nLocation: " + response.data[i].venue.city + ", " + response.data[i].venue.region +
+                        ", " + response.data[i].venue.country + "\nDate: " + convertedDate + "\n-------------------------------------------------------------------";
+
+                    fs.appendFile("log.txt", text, function (error) {
+                        if (error) {
+                            console.log(error)
+                        }
+                        // else {
+                        //     console.log("Content Added")
+                        // }
+                    })
                 }
+
                 // if (response.data === null){
                 //     console.log("No upcoming shows")
                 // }
@@ -99,6 +112,16 @@ function runSpotify() {
             console.log("Link: " + data.tracks.items[i].external_urls.spotify)
             console.log("Album: " + data.tracks.items[i].album.name)
             console.log("------------------------------------------------------------")
+            var text="\nArtist: " + data.tracks.items[i].album.artists[0].name+"\nSong: " + data.tracks.items[i].name+"\nLink: " + 
+            data.tracks.items[i].external_urls.spotify+"\nAlbum: " + data.tracks.items[i].album.name+"\n-------------------------------------------------------------------";
+            fs.appendFile("log.txt", text, function (error) {
+                if (error) {
+                    console.log(error)
+                }
+                // else {
+                //     console.log("Content Added")
+                // }
+            })
         }
     });
 }
@@ -117,22 +140,30 @@ function runOmdb() {
             console.log("Plot: " + response.data.Plot)
             console.log("Actors: " + response.data.Actors)
             console.log("------------------------------------------------------------")
+            text="\nTitle: " + response.data.Title+"\nYear: " + response.data.Year+"\nIMDb Rating: " + response.data.Ratings[0].Value+"\nRotten Tomatoes Rating: " + 
+            response.data.Ratings[1].Value+"\nCountry: " + response.data.Country+"\nLanguage: " + response.data.Language+"\nPlot: " + response.data.Plot+
+            "\nActors: " + response.data.Actors+"\n-------------------------------------------------------------------";
+            fs.appendFile("log.txt", text, function (error) {
+                if (error) {
+                    console.log(error)
+                }
+            })
         })
 
 }
 function runRandom() {
     // console.log("Do what it says");
-    fs.readFile("random.txt", "utf8", function(error, data) {
+    fs.readFile("random.txt", "utf8", function (error, data) {
         if (error) {
-          return console.log(error);
+            return console.log(error);
         }
         // console.log(data);      
-        var dataArr = data.split(",");      
+        var dataArr = data.split(",");
         // console.log(dataArr);
         command = dataArr[0];
         song = dataArr[1];
         runSpotify();
-      });
+    });
 }
 
 
