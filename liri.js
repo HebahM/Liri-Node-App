@@ -9,16 +9,24 @@ var spotify = new Spotify(keys.spotify);
 
 var axios = require("axios");
 
+var fs = require("fs");
+
 var command = process.argv[2]
 var userInput = "";
 
+// Commands:
+// concert-this
+// spotify-this-song
+// movie-this
+// do-what-it-says
+
 for (var i = 3; i < process.argv.length; i++) {
     if (i > 3 && i < process.argv.length) {
-      userInput = userInput + "+" + process.argv[i];
+        userInput = userInput + "+" + process.argv[i];
     } else {
-      userInput += process.argv[i];  
+        userInput += process.argv[i];
     }
-  }
+}
 
 // console.log(userInput)
 
@@ -27,11 +35,14 @@ switch (command) {
         var band = userInput;
         runBands();
         break;
-    case "spotify-this-song": 
+    case "spotify-this-song":
         var song = userInput;
+        if (!userInput) {
+            song = "the sign"
+        }
         runSpotify();
         break;
-    case "movie-this": 
+    case "movie-this":
         var movie = userInput;
         if (!userInput) {
             movie = "Mr. Nobody"
@@ -45,32 +56,31 @@ switch (command) {
 
 // console.log("hello")
 
-// Commands:
-// concert-this
-// spotify-this-song
-// movie-this
-// do-what-it-says
+
 
 
 
 function runBands() {
     // console.log("Band: " + band)
     axios.get("https://rest.bandsintown.com/artists/" + band + "/events?app_id=codingbootcamp")
-    .then(
-        function (response) {
-            console.log(response.data)
-            for (var i = 0; i < response.data.length; i++) {
-                console.log("-----------------------------------------------------------------------")
-                console.log("Venue: " + response.data[i].venue.name)
-                console.log("Location: " + response.data[i].venue.city + ", "+ response.data[i].venue.region + ", " +response.data[i].venue.country)
-                console.log("Venue: " + response.data[i].datetime)
-                console.log("-----------------------------------------------------------------------")
+        .then(
+            function (response) {
+                // console.log(response.data)
+                for (var i = 0; i < response.data.length; i++) {
+                    console.log("-----------------------------------------------------------------------")
+                    console.log("Venue: " + response.data[i].venue.name)
+                    console.log("Location: " + response.data[i].venue.city + ", " + response.data[i].venue.region + ", " + response.data[i].venue.country)
+                    var concertDateTime = response.data[i].datetime;
+                    var moment = require('moment');
+                    var convertedDate = moment(concertDateTime).format('L');
+                    console.log("Date: " + convertedDate)
+                    console.log("-----------------------------------------------------------------------")
+                }
+                // if (response.data === null){
+                //     console.log("No upcoming shows")
+                // }
             }
-            // if (response.data === null){
-            //     console.log("No upcoming shows")
-            // }
-        }
-    )
+        )
 }
 
 
@@ -78,20 +88,23 @@ function runBands() {
 function runSpotify() {
     // console.log("Song: " + song)
     spotify.search({ type: 'track', query: song }, function (err, data) {
-    if (err) {
-        return console.log('Error occurred: ' + err);
-    }
-    // console.log(JSON.stringify(data, null, 2));
-    console.log("Artist: " + data.tracks.items[0].album.artists[0].name)
-    console.log("Song: " + data.tracks.items[0].name)
-    console.log("Link: " + data.tracks.items[0].external_urls.spotify)
-    console.log("Album: " + data.tracks.items[0].album.name)
-    console.log("------------------------------------------------------------")
-});
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        }
+        // console.log(JSON.stringify(data, null, 2));
+        for (var i = 0; i < data.tracks.items.length; i++) {
+            console.log("------------------------------------------------------------")
+            console.log("Artist: " + data.tracks.items[i].album.artists[0].name)
+            console.log("Song: " + data.tracks.items[i].name)
+            console.log("Link: " + data.tracks.items[i].external_urls.spotify)
+            console.log("Album: " + data.tracks.items[i].album.name)
+            console.log("------------------------------------------------------------")
+        }
+    });
 }
 function runOmdb() {
     // console.log("Movie: " + movie)
-    axios.get("http://www.omdbapi.com/?t="+movie+"&y=&plot=short&apikey=trilogy").then(
+    axios.get("http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy").then(
         function (response) {
             // console.log(response.data);
             console.log("------------------------------------------------------------")
@@ -108,37 +121,21 @@ function runOmdb() {
 
 }
 function runRandom() {
-    console.log("Do what it says")
+    // console.log("Do what it says");
+    fs.readFile("random.txt", "utf8", function(error, data) {
+        if (error) {
+          return console.log(error);
+        }
+        // console.log(data);      
+        var dataArr = data.split(",");      
+        // console.log(dataArr);
+        command = dataArr[0];
+        song = dataArr[1];
+        runSpotify();
+      });
 }
 
 
-
-
-// spotify.search("https://api.spotify.com/v1/artists/1vCWHaC5f2uS3yhpwWbIA6/albums?album_type=SINGLE&offset=20&limit=10")
-//     .then(function (response) {
-//         console.log(response)
-//     })
-
-// TEST
-// console.log("Keys below...hopefully")
-// console.log(spotify)
-
-
-// console.log("-----------------------------------------------")
-
-
-// console.log("-----------------------------------------------")
-
-// bands in town url
-// var artist = "rage against the machine"
-// "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
-
-
-
-
 // TO DO:
-// add for loop for Spotify.
-// add function for random.txt.
-// moment.js for concert date. 
 // take video of app running. 
 // BONUS
