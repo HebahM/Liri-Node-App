@@ -15,14 +15,14 @@ There are various commands that will each run the user's parameters through a sp
 * 'do-what-it-says' is a surprise -- for when you're not sure what to search for.
     * sample command: "node liri do-what-it-says"
 
-Click here for a vido preview of the app:
+Click here for a video preview of the app:
 [Link](https://youtu.be/9520HfVhmrs)
 
 GIFs
-[](Demo/gif1.gif)
-[](Demo/gif2.gif)
-[](Demo/gif3.gif)
-[](Demo/gif4.gif)
-[](Demo/gif5.gif)
-[](Demo/gif6/gif)
-[](Demo/gif7.gif)
+[1](Demo/gif1.gif)
+[2](Demo/gif2.gif)
+[3](Demo/gif3.gif)
+[4](Demo/gif4.gif)
+[5](Demo/gif5.gif)
+[6](Demo/gif6/gif)
+[7](Demo/gif7.gif)
