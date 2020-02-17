@@ -24,5 +24,5 @@ GIFs
 [3](Demo/gif3.gif)
 [4](Demo/gif4.gif)
 [5](Demo/gif5.gif)
-[6](Demo/gif6/gif)
+[6](Demo/gif6.gif)
 [7](Demo/gif7.gif)
